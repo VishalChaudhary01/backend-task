@@ -37,7 +37,6 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 
 export const searchUser = asyncHandler(async (req: Request, res: Response) => {
      const { fullName = '', username = '' } = req.query as { fullName: string, username: string };
-     console.log(fullName, username);
      const filter = {
           $or: [
                { fullName: { $regex: fullName, $options: 'i' } },
