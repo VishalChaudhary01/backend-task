@@ -2,8 +2,9 @@ import { ERROR_CODE, ERROR_NAME } from "../config/error";
 import { AppError } from "../utils/appError";
 import { NextFunction, Request, Response } from "express";
 import { ZodError } from "zod";
+import { IAuthRequest } from "./isAuth";
 
-export const errorHandler = (error: Error, req: Request, res: Response, next: NextFunction) => {
+export const errorHandler = (error: Error, req: Request | IAuthRequest, res: Response, next: NextFunction) => {
      console.log('❌ Error Details: ', error);
      if (error instanceof AppError) {
           res.status(error.statusCode).json({ success: false, name: error.name, message: error.message, error: error.error, ...(process.env.NODE_ENV === 'development' && { stack: error.stack }) });
