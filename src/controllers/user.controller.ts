@@ -37,23 +37,30 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 
 export const searchUser = asyncHandler(async (req: Request, res: Response) => {
      const { fullName = '', username = '' } = req.query as { fullName: string, username: string };
-     const filter = {
-          $or: [
-               { fullName: { $regex: fullName, $options: 'i' } },
-               { username: { $regex: username, $options: 'i' } },
-          ],
-     };
+     if (!fullName && !username) throw new AppError("Provide at least one search parameter (fullName or username)", "BAD_REQUEST");
+     const filter: any = {};
+     if (fullName) {
+          filter.fullName = { $regex: `^${fullName}`, $options: 'i' };
+     }
+     if (username) {
+          filter.username = { $regex: `^${username}`, $options: 'i' };
+     }
      const users = await User.find(filter);
-     if (!users || users.length === 0) {
-          res.status(404).json({ success: false, message: "No users found" });
+     if (!users.length) {
+          res.status(200).json({ success: true, message: "No users found for given search" });
           return;
      }
-     res.status(200).json({ success: true, message: "User found", users: users.map((user) => ({
-          fullName: user.fullName,
-          username: user.username,
-          gender: user.gender,
-          dateOfBirth: user.dateOfBirth,
-          country: user.country,
-     })) });
+     res.status(200).json({
+          success: true,
+          message: "Users found",
+          users: users.map((user) => ({
+               fullName: user.fullName,
+               username: user.username,
+               gender: user.gender,
+               dateOfBirth: user.dateOfBirth,
+               country: user.country,
+          })),
+     });
 });
+
 
