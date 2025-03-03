@@ -1,6 +1,6 @@
 # Overview
 
-This is a simple express server whaere a user can register, login, and search by username or fullname.
+This is a simple express server where a user can register, login, and search by username or fullname.
 
 ## To Run the Project Locally
 
